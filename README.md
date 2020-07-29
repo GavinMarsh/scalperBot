@@ -6,6 +6,6 @@ bot details
   curl -s https://api.telegram.org/bot<token>/getMe
 
 get messages
-  curl -s https://api.telegram.org/bot<token>-i-DQ0/getUpdates
+  curl -s https://api.telegram.org/bot<token>/getUpdates
   
   
