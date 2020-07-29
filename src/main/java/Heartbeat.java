@@ -1,4 +1,4 @@
-public class heartbeat implements Runnable{
+public class Heartbeat implements Runnable{
 
     public void run() {
         while (true) {

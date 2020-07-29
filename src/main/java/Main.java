@@ -15,7 +15,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        Thread t1 = new Thread(new heartbeat());
+        Thread t1 = new Thread(new Heartbeat());
         t1.start();
     }
 }

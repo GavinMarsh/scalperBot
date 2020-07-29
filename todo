@@ -49,7 +49,7 @@ Platform:
 	TRDR sends alert to Telegram channel ID:TRDR.io.
 
 Scalper-telegram-bot:
-	heartbeat()
+	Heartbeat()
 	send message to scalper-telegram-bot "server-running"
 		sleep 60min
 

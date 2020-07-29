@@ -31,7 +31,7 @@ public class Bot extends TelegramLongPollingBot {
 
 
     /**
-     * Method sends heartbeat to the bot to confirm server is still up.
+     * Method sends Heartbeat to the bot to confirm server is still up.
      */
 
     // complete
