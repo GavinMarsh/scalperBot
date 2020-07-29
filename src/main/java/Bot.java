@@ -4,8 +4,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Bot extends TelegramLongPollingBot {
 
+public class Bot extends TelegramLongPollingBot {
 
     public void onUpdateReceived(Update update) {   //process incoming message
         String msg = update.getMessage().getText();
@@ -19,6 +19,9 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     * Method for checking if message contains a signal.
+     */
     public boolean SignalCheck(String msg, String symbol) {
         String validPattern = symbol;
         Pattern pattern = Pattern.compile(validPattern);
@@ -26,10 +29,23 @@ public class Bot extends TelegramLongPollingBot {
         return matcher.find();
     }
 
+
+    /**
+     * Method sends heartbeat to the bot to confirm server is still up.
+     */
+
+    // complete
+
+    /**
+     * Returns bot name.
+     */
     public String getBotUsername() {
         return "ScalperTelegramBot";
     }
 
+    /**
+     * Returns bot token.
+     */
     public String getBotToken() {
         return "1364754722:AAHqxkoB2NH6jRq2Uxky4Rbq0mJHs-i-DQ0"; //change this to read from local file
     }

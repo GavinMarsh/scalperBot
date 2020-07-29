@@ -1,16 +1,35 @@
 ToDo:
 
-- Class Bot > Method getBotToken > read token from local file.
+- send server-up message to channel
 
-- Include method to send bot a message.
+- deploy bot on Heroku
 
+- read token from local-file
+https://stackoverflow.com/questions/55776767/how-to-hide-bot-telegram-token-with-gitignore
+
+
+-----------------Order handling-------------------------------
+- complete sudo code.
+
+
+
+---------------Further Development-----------------------------
 - Include method to allow inline buttons.
+    - user defined order size
+    - stop/start bot (could this be done with the usual /start /stop ?)
+    - current price/open orders/pending orders.
+    - inline button Price / Open Positions / Active Orders
+    - inline button to exit all open positions by market order.
+      	    - option to exit all by limit order.
+      	    - option to exit individual orders.	
+    - inline button 
+    
+    
 
-- hand over order direction to market-maker and place order.
+------------------Helpers---------------------------------------------
 
-
-
-
+How to call python from java
+    https://www.baeldung.com/java-working-with-python
 
 Terminal helpers:
 bot details
@@ -18,3 +37,53 @@ bot details
 
 get messages
   curl -s https://api.telegram.org/bot<token>/getUpdates
+  
+  
+--------------------------Pseudo code-------------------------------------
+
+version_1.0
+User:
+	Inputs settings into TRDR and activates Telegram alert signal.
+
+Platform:
+	TRDR sends alert to Telegram channel ID:TRDR.io.
+
+Scalper-telegram-bot:
+	heartbeat()
+	send message to scalper-telegram-bot "server-running"
+		sleep 60min
+
+- Sends signals to Scalper-app.
+
+Scalper-app:
+	//variables	
+	tradeCounter = 0
+	tradeDirection = null
+	newMessage = false
+	orderConfirmation = false
+	
+	//methods
+	void checkForMessage
+
+		If newMessage = true && tradeCounter <= 4
+			tradeDirection = direction in Scalper-telegram-bot
+			Enter Bitmex limit-order (current mark), take-profit-limit-order ($25 from mark), direction = tradeDirection.
+			
+			if order confirmation = true
+				tradeCounter ++
+			
+				if tradeCounter = 5
+					sleep for 60min
+					tradeCounter = 0
+				
+			else throw error to log but continue? 
+			
+		send order confirmation to user && Open Positions / Active Orders
+
+	
+
+				
+
+		
+
+	
