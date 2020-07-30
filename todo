@@ -1,9 +1,11 @@
 ToDo:
 
-- deploy bot on Heroku
+- create a safety mechanism so that the bot does not process 
+old telegram messages on start up.
 
-- read token from local-file
-https://stackoverflow.com/questions/55776767/how-to-hide-bot-telegram-token-with-gitignore
+- add methods for inline & reply keyboard buttons.
+
+- purchase GitHub professional to hide code.
 
 
 -----------------Order handling-------------------------------
@@ -12,7 +14,7 @@ https://stackoverflow.com/questions/55776767/how-to-hide-bot-telegram-token-with
 
 
 ---------------Further Development-----------------------------
-- Include method to allow inline buttons.
+- Complete user functionality using inline buttons.
     - user defined order size
     - stop/start bot (could this be done with the usual /start /stop ?)
     - current price/open orders/pending orders.
@@ -20,12 +22,14 @@ https://stackoverflow.com/questions/55776767/how-to-hide-bot-telegram-token-with
     - inline button to exit all open positions by market order.
       	    - option to exit all by limit order.
       	    - option to exit individual orders.	
-    - inline button 
+    
     
     
 
 ------------------Helpers---------------------------------------------
-
+Bot is an extension of this tutorial
+    https://codegym.cc/groups/posts/telegram-bot-in-java
+    
 How to call python from java
     https://www.baeldung.com/java-working-with-python
 
