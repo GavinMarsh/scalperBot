@@ -23,7 +23,7 @@
                     <assembleDirectory>target</assembleDirectory>
                     <programs>
                         <program>
-                            <mainClass>src.main.java.Main</mainClass>
+                            <mainClass>Main</mainClass>
                             <name>scalperBot</name>
                         </program>
                     </programs>
