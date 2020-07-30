@@ -10,6 +10,10 @@ old telegram messages on start up.
 
 -----------------Order handling-------------------------------
 - follow puesdocode for basic order entry/exit.
+- start order-engine in off mode with a 1 minute sleep function
+this will allow any old telegram messages delived from the server to be ignored.
+- prompt user for to turn on.
+- prompt user for fixed order size. 
 
 
 

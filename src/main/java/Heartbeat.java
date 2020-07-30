@@ -3,6 +3,7 @@ public class Heartbeat implements Runnable {
     // Method sends show server up message to Telegram
     public void run() {
         Bot botObject = new Bot();
+        botObject.sendMsg("566251065", "\uD83E\uDD16 online");
 
         while (true) {
             botObject.sendMsg("566251065", "\uD83E\uDD16 waiting");
