@@ -1,7 +1,5 @@
 ToDo:
 
-- send server-up message to channel
-
 - deploy bot on Heroku
 
 - read token from local-file
