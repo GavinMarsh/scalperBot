@@ -1,31 +1,24 @@
 # scalperBot
 Telegram Bot coded in Java
 
-## Heroku deployment
-#### Install dependencies on heroku server 
-https://devcenter.heroku.com/articles/exec
+# aws deployment - ubuntu18.04 build
+#### dependencies
 
-Open a bash terminal and log into heroku account
+Server: LXDE / Java14.02 / Maven / Node JS / NPM
 
-`$heroku login`
+Local: SSH/Putty
 
-Install nodejs plugin on heroku server
+#### SSH onto ubuntu server and set up server password for LDXE to work.
 
-`$heroku plugins:install nodejs`
+`sudo passwd ubuntu`
 
-Install npm plugin
 
-`$heroku plugins:install npm`
 
-Install Heroku Exec and push to repo master
 
-`$git commit -m "Heroku Exec" --allow-empty`
 
-`$git push heroku master`
 
-Now SSH into your app terminal    
 
-`$heroku ps:exec --dyno=worker.1`
+
 
  
 
