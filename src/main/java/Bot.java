@@ -14,11 +14,14 @@ public class Bot extends TelegramLongPollingBot {
         String msg = update.getMessage().getText();
         String buy = ">";
         String sell = "<";
+        Boolean active = Settings.getActive();
+        Boolean sleep = Settings.getSleep();
 
-        if (SignalCheck(msg,buy)) {
-            System.out.print("placing buy order"); //hand over to market-maker
+        if (SignalCheck(msg,buy) && active && !sleep) {
+            System.out.print("placing buy order");
             sendMsg("566251065", "\uD83E\uDD16 placing buy order");
-        } else if (SignalCheck(msg,sell)) {
+
+        } else if (SignalCheck(msg,sell) && !sleep) {
             System.out.print("placing sell order");
             sendMsg("566251065", "\uD83E\uDD16 placing sell order");
         }
@@ -27,13 +30,12 @@ public class Bot extends TelegramLongPollingBot {
     /**
      * Method for checking if message contains a signal.
      */
-    public boolean SignalCheck(String msg, String symbol) {
-        String validPattern = symbol;
+    public boolean SignalCheck(String msg, String signal) {
+        String validPattern = signal;
         Pattern pattern = Pattern.compile(validPattern);
         Matcher matcher = pattern.matcher(msg);
         return matcher.find();
     }
-
 
     /**
      * Method for creating a message and sending it.

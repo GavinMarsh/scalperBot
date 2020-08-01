@@ -1,19 +1,20 @@
 ToDo:
 
-- create a safety mechanism so that the bot does not process 
-old telegram messages on start up.
+- set active to false in Settings Class.
 
 - add methods for inline & reply keyboard buttons.
+    Fixed order size?
+    Activate? - add a 2min delay after activate is turned on with message "Bot will be live in 2min" this will
+                prevent bot from processing old telegram messages delivered from server.
+
+- remove initialisation message.
 
 - purchase GitHub professional to hide code.
 
 
 -----------------Order handling-------------------------------
 - follow puesdocode for basic order entry/exit.
-- start order-engine in off mode with a 1 minute sleep function
-this will allow any old telegram messages delived from the server to be ignored.
-- prompt user for to turn on.
-- prompt user for fixed order size. 
+
 
 
 

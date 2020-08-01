@@ -15,7 +15,10 @@ public class Main {
             e.printStackTrace();
         }
 
-        Thread t1 = new Thread(new Heartbeat());
-        t1.start();
+        Thread appThread1 = new Thread(new Heartbeat());
+        appThread1.start();
+
+        Thread appThread2 = new Thread(new Initialise());
+        appThread2.start();
     }
 }
