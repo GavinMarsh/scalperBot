@@ -2,9 +2,13 @@
 Telegram Bot coded in Java
 
 # aws deployment - ubuntu18.04 build
-#### dependencies
 
-Server: LXDE / Java14.02 / Maven / Node JS / NPM
+#### Environment
+
+IntelliJ IDEA Ultimate
+#### Dependencies
+
+Server: LXDE / Java 11 default / Maven / Node JS / NPM
 
 Local: SSH/Putty
 
