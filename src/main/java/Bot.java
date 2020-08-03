@@ -1,169 +1,80 @@
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import static java.lang.StrictMath.toIntExact;
+import static java.lang.Math.toIntExact;
 
 
 public class Bot extends TelegramLongPollingBot {
-
-    //Class variables
-    public static String buttonText = ""; //var to store inline button message.
-    public static boolean addKeyboard = false; //add keyboard with message?
-    public static String callBackCode = "test"; //var to store callBackData.
-    public static final String chatId = "566251065"; //bot chatId
-
-    /**
-     * Method that initialises bot settings.
-     */
-    public static void initialiseBot() {
-        Bot messengerBot = new Bot();
-        setAddKeyboard(true);
-        setButtonText("setup bot");
-        setCallBackCode("setup bot");
-        messengerBot.sendMsg(chatId, "\uD83E\uDD16 online");
-    }
-
-    /**
-     * Method for processing incoming messages.
-     */
+    @Override
     public void onUpdateReceived(Update update) {
-        // collect message and check if it contains a signal
-        String msg = update.getMessage().getText();
-        String buy = ">";
-        String sell = "<";
-        boolean active = Settings.getActive();
-        boolean sleep = Settings.getSleep();
 
-        if (SignalCheck(msg, buy) && active && !sleep) {
-            System.out.print("placing buy order");
-            setAddKeyboard(false);
-            sendMsg(chatId, "\uD83E\uDD16 placing buy order");
+        // We check if the update has a message and the message has text
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            String message_text = update.getMessage().getText();
+            long chat_id = update.getMessage().getChatId();
+            if (update.getMessage().getText().equals("/start")) {
 
-        } else if (SignalCheck(msg, sell) && !sleep) {
-            System.out.print("placing sell order");
-            setAddKeyboard(false);
-            sendMsg(chatId, "\uD83E\uDD16 placing sell order");
 
-        }
+                SendMessage message = new SendMessage() // Create a message object object
+                        .setChatId(chat_id)
+                        .setText("You send /start");
+                InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+                List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
+                List<InlineKeyboardButton> rowInline = new ArrayList<>();
+                rowInline.add(new InlineKeyboardButton().setText("Update message text").setCallbackData("update_msg_text"));
+                // Set the keyboard to the markup
+                rowsInline.add(rowInline);
+                // Add it to the message
+                markupInline.setKeyboard(rowsInline);
+                message.setReplyMarkup(markupInline);
+                try {
+                    execute(message); // Sending our message object to user
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
+            } else {
+
+            }
+
+        }else if (update.hasCallbackQuery()) {
+                // Set variables
+                String call_data = update.getCallbackQuery().getData();
+                long message_id = update.getCallbackQuery().getMessage().getMessageId();
+                long chat_id = update.getCallbackQuery().getMessage().getChatId();
+
+                if (call_data.equals("update_msg_text")) {
+                    String answer = "Updated message text";
+                    EditMessageText new_message = new EditMessageText()
+                            .setChatId(chat_id)
+                            .setMessageId(toIntExact(message_id))
+                            .setText(answer);
+                    try {
+                        execute(new_message);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
     }
 
-    /**
-     * Method for checking if message contains a signal.
-     */
-    public boolean SignalCheck(String msg, String signal) {
-        Pattern validPattern;
-        validPattern = Pattern.compile(signal);
-        Matcher matcher = validPattern.matcher(msg);
-        return matcher.find();
-    }
-
-    /**
-     * Method for creating a message and sending it.
-     * @param chatId chat id
-     * @param s The String that you want to send as a message.
-     */
-    public synchronized void sendMsg(String chatId, String s) {
-        SendMessage execute = new SendMessage();
-        execute.enableMarkdown(true);
-        execute.setChatId(chatId);
-        execute.setText(s);
-        if (getAddKeyboard()) {
-            inlineKeyboard(execute, getButtonText());
-        }
-        try {
-            execute(execute);
-        } catch (TelegramApiException e) {
-            Logger log = null;
-            assert false;
-            log.log(Level.SEVERE, "Exception: ", e.toString());
-        }
-    }
-
-    /**
-     * Method to add an inlineKeyboard to a message.
-     */
-    public static void inlineKeyboard(SendMessage message, String buttonText) {
-        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        List<InlineKeyboardButton> button1 = new ArrayList<>();
-        button1.add(new InlineKeyboardButton().setText(buttonText).setCallbackData(getCallBackCode()));
-        // Set the keyboard to the markup
-        buttons.add(button1);
-        // Add it to the message
-        InlineKeyboardMarkup markupKeyboard = new InlineKeyboardMarkup();
-        markupKeyboard.setKeyboard(buttons);
-        message.setReplyMarkup(markupKeyboard);
-    }
-
-    /**
-     * Getter Method for buttonText.
-     */
-    public static String getButtonText() {
-        return buttonText;
-    }
-
-    /**
-     * Setter Method for buttonText.
-     */
-    public static void setButtonText(String text) {
-        buttonText = text;
-    }
-
-    /**
-     * Getter Method for addKeyboard.
-     */
-    public static boolean getAddKeyboard() {
-        return addKeyboard;
-    }
-
-    /**
-     * Setter Method for addKeyboard.
-     */
-    public static void setAddKeyboard(boolean keyboard) {
-        addKeyboard = keyboard;
-    }
-
-    /**
-     * Getter Method for getting CallBackCode.
-     */
-    public static String getCallBackCode() {
-        return callBackCode;
-    }
-
-    /**
-     * Setter Method for setting CallBackCode.
-     */
-    public static void setCallBackCode(String code) {
-        callBackCode = code;
-    }
-
-    /**
-     * Returns bot name.
-     */
+    @Override
     public String getBotUsername() {
+        // Return bot username
+        // If bot username is @MyAmazingBot, it must return 'MyAmazingBot'
         return "ScalperTelegramBot";
     }
 
-    /**
-     * Returns bot token.
-     */
+    @Override
     public String getBotToken() {
-        return "1364754722:AAHqxkoB2NH6jRq2Uxky4Rbq0mJHs-i-DQ0"; //change this to read from local file
+        // Return bot token from BotFather
+        return "1364754722:AAHqxkoB2NH6jRq2Uxky4Rbq0mJHs-i-DQ0";
     }
 }
-

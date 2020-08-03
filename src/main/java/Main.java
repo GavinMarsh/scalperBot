@@ -3,23 +3,18 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class Main {
-
     public static void main(String[] args) {
-
+        // Initialize Api Context
         ApiContextInitializer.init();
-        TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
-        try {
-            telegramBotsApi.registerBot(new Bot());
 
+        // Instantiate Telegram Bots API
+        TelegramBotsApi botsApi = new TelegramBotsApi();
+
+        // Register our bot
+        try {
+            botsApi.registerBot(new Bot());
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
-
-        Thread appThread2 = new Thread(new Initialise());
-        appThread2.start();
-
-        // initialise bot
-        Bot.initialiseBot();
-
     }
 }
