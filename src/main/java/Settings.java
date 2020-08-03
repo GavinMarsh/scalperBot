@@ -1,38 +1,39 @@
-public class Settings {
 
-    /*Class variables*/
-    static public Boolean active = true; //is the bot active.
-    static public Boolean sleep = false; //is the bot asleep.
-    static public String symbol = "XBT-USD"; //user defined symbol.
-    static public Integer fixedQty = 0; //user defined fixed order quantity.
-    static public Integer buyQty = 0; //user defined buy order quantity.
-    static public Integer sellQty = 0; //user defined sell order quantity.
+public class Settings{
+
+    // Class variables
+    private static boolean active = true; //is the bot active.
+    private static boolean sleep = false; //is the bot asleep.
+    private static String symbol = "XBT-USD"; //user defined symbol.
+    private static int fixedQty = 0; //user defined fixed order quantity.
+    private static int buyQty = 0; //user defined buy order quantity.
+    private static int sellQty = 0; //user defined sell order quantity.
 
     /**
      * Getter Method for Bot activation.
      */
-    public static Boolean getActive() {
+    public static boolean getActive() {
         return active;
     }
 
     /**
      * Setter Method for Bot activation.
      */
-    public static void setActive(Boolean userActivate) {
+    public static void setActive(boolean userActivate) {
         active = userActivate;
     }
 
     /**
      * Getter Method for Bot sleep.
      */
-    public static Boolean getSleep() {
+    public static boolean getSleep() {
         return sleep;
     }
 
     /**
      * Setter Method for Bot sleep.
      */
-    public static void setSleep(Boolean userSleep) {
+    public static void setSleep(boolean userSleep) {
         sleep = userSleep;
     }
 
@@ -53,7 +54,7 @@ public class Settings {
     /**
      * Getter Method for fixed order quantity.
      */
-    public static Integer getFixedQty() {
+    public static int getFixedQty() {
         return fixedQty;
     }
 
@@ -67,7 +68,7 @@ public class Settings {
     /**
      * Getter Method for buy order quantity.
      */
-    public static Integer getBuyQty() {
+    public static int getBuyQty() {
         return buyQty;
     }
 
@@ -81,7 +82,7 @@ public class Settings {
     /**
      * Getter Method for sell order quantity.
      */
-    public static Integer getSellQty() {
+    public static int getSellQty() {
         return sellQty;
     }
 

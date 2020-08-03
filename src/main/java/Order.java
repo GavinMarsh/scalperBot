@@ -1,9 +1,9 @@
-public class Order extends Bot{
+public class Order {
 
-    /*Instance variables*/
-    Integer size;
+    // Instance variables
+    int size;
     String direction;
-    Double ask;
+    double ask;
 
     /**
      * Getter Method for current symbol ask.

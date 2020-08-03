@@ -15,10 +15,11 @@ public class Main {
             e.printStackTrace();
         }
 
-        Thread appThread1 = new Thread(new Heartbeat());
-        appThread1.start();
-
         Thread appThread2 = new Thread(new Initialise());
         appThread2.start();
+
+        // initialise bot
+        Bot.initialiseBot();
+
     }
 }
