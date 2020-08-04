@@ -32,6 +32,22 @@ ToDo:
     
 
 ------------------Helpers---------------------------------------------
+-------------- edits the last message (good for final confirmations ------------
+        Bot aNewBot = new Bot();
+        System.out.print("got to set all class");
+        String answer = "Set position size";
+        EditMessageText new_message = new EditMessageText()
+                .setChatId(Bot.getChatId())
+                .setMessageId(toIntExact(Bot.getCbMessageId()))
+                .setText(answer);
+        try {
+            aNewBot.execute(new_message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+---------------------print to terminal-------------------------------
+System.out.print(Bot.getButtonText());
+
 Bot is an extension of this tutorial
     https://codegym.cc/groups/posts/telegram-bot-in-java
     
