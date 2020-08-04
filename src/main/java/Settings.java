@@ -92,4 +92,7 @@ public class Settings{
     public static void setSellQty(Integer userSellQty) {
         sellQty = userSellQty;
     }
+
+    public static void command() {
+    }
 }
