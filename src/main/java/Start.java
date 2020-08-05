@@ -9,18 +9,23 @@ public class Start {
         // add a keyboard
         Bot.setAddKeyboard(true);
 
-        //add button array list
+        //create a list of keyboard rows
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        List<InlineKeyboardButton> button1 = new ArrayList<>();
-        button1.add(new InlineKeyboardButton().setText("setup bot").setCallbackData("setup bot"));
-        buttons.add(button1);
+
+        List<InlineKeyboardButton> tradeSettings = new ArrayList<>();
+        tradeSettings.add(new InlineKeyboardButton().setText("trade settings").setCallbackData("trade settings"));
+        buttons.add(tradeSettings);
+
+        List<InlineKeyboardButton> help = new ArrayList<>();
+        help.add(new InlineKeyboardButton().setText("help").setCallbackData("help"));
+        buttons.add(help);
+
+        //send button array to Bot variable buttonArray
         Bot.setButtonArray(buttons);
 
-        Bot.setCallBackSent("setup bot");
-
         // new bot object to be able to send a message as sendMsg() is not static
-        Bot settings = new Bot();
-        settings.sendMsg(Bot.getChatId(), "\uD83E\uDD16 online");
+        Bot start = new Bot();
+        start.sendMsg(Bot.getChatId(), "\uD83E\uDD16 online");
 
     }
 }

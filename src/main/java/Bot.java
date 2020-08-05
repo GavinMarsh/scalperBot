@@ -23,9 +23,12 @@ public class Bot extends TelegramLongPollingBot {
     public static SendMessage messageId;
     public static long cbMessageId;
     public static boolean addKeyboard;
-    public static String callBackSent;
     public static long cbChatId;
     public static List<List<InlineKeyboardButton>> buttonArray;
+    public static String position_size_buy;
+    public static String position_size_sell;
+    public static String contract;
+
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -61,8 +64,8 @@ public class Bot extends TelegramLongPollingBot {
                 case "/sleep":
                     Sleep.command();
                     break;
-                case "/setall":
-                    Setall.command();
+                case "/setsame":
+                    Setsame.command();
                     break;
                 case "/setbuy":
                     Setbuy.command();
@@ -110,17 +113,59 @@ public class Bot extends TelegramLongPollingBot {
             setCbChatId();
 
             switch (getCbTxt()) {
-                case "setup bot":
-                    Setall.command();
+                case "trade settings":
+                    TradeSettings.command();
                     break;
-                case "$1,000":
+                case "same order size":
+                    Setsame.command();
+                    break;
+                case "$500same":
+                    setPositionSizeBuy("$500");
+                    setPositionSizeSell("$500");
+                    Setcontract.command();
+                    break;
+                case "$1,000same":
+                    setPositionSizeBuy("$1,000");
+                    setPositionSizeSell("$1,000");
+                    Setcontract.command();
+                    break;
+                case "$2,000same":
+                    setPositionSizeBuy("$2,000");
+                    setPositionSizeSell("$2,000");
+                    Setcontract.command();
+                    break;
+                case "$2,500same":
+                    setPositionSizeBuy("$2,500");
+                    setPositionSizeSell("$2,500");
+                    Setcontract.command();
+                    break;
+                case "$3,000same":
+                    setPositionSizeBuy("$3,000");
+                    setPositionSizeSell("$3,000");
+                    Setcontract.command();
+                    break;
+                case "$4,000same":
+                    setPositionSizeBuy("$4,000");
+                    setPositionSizeSell("$4,000");
+                    Setcontract.command();
+                    break;
+                case "$5,000same":
+                    setPositionSizeBuy("$5,000");
+                    setPositionSizeSell("$5,000");
+                    Setcontract.command();
+                    break;
+                case "XBTUSD":
+                    setContract("XBTUSD");
+                    Activate.command();
+                    break;
+                case "activate":
                     Activate.command();
                     break;
                 case "/sleep":
                     Sleep.command();
                     break;
-                case "/setall":
-                    Setall.command();
+                case "/setsame":
+                    Setsame.command();
                     break;
                 case "/setbuy":
                     Setbuy.command();
@@ -132,6 +177,9 @@ public class Bot extends TelegramLongPollingBot {
                     Setcontract.command();
                     break;
                 case "/settings":
+                    Settings.command();
+                    break;
+                case "settings":
                     Settings.command();
                     break;
                 case "/positions":
@@ -223,6 +271,48 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     /**
+     * Setter Method for position_size_buy.
+     */
+    private static void setPositionSizeBuy(String size) {
+        position_size_buy = size;
+    }
+
+    /**
+     * Getter Method for position_size_buy.
+     */
+    public static String getPositionSizeBuy() {
+        return position_size_buy;
+    }
+
+    /**
+     * Setter Method for position_size_sell.
+     */
+    private static void setPositionSizeSell(String size) {
+        position_size_sell = size;
+    }
+
+    /**
+     * Getter Method for position_size_sell.
+     */
+    public static String getPositionSizeSell() {
+        return position_size_sell;
+    }
+
+    /**
+     * Setter Method for contract.
+     */
+    public static void setContract(String symbol) {
+        contract = symbol;
+    }
+
+    /**
+     * Getter Method for contract.
+     */
+    public static String getContract() {
+        return contract;
+    }
+
+    /**
      * Setter Method for call back message id.
      */
     private static void setCbMessageID() {
@@ -276,13 +366,6 @@ public class Bot extends TelegramLongPollingBot {
      */
     public static void setAddKeyboard(boolean keyboard) {
         addKeyboard = keyboard;
-    }
-
-    /**
-     * Setter Method for setting CallBackCode.
-     */
-    public static void setCallBackSent(String data) {
-        callBackSent = data;
     }
 
     /**
