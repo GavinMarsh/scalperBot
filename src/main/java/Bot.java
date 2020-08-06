@@ -390,13 +390,6 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     /**
-     * Getter method to get new message id.
-     */
-    public static SendMessage getMessageId() {
-        return messageId;
-    }
-
-    /**
      * Getter method to get new message.
      */
     public static String getMessageText() {

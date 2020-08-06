@@ -27,7 +27,7 @@ public class TradeSettings {
             // add a new keyboard
             Bot.setAddKeyboard(true);
 
-//create a list of keyboard rows
+            //create a list of keyboard rows
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
 
             //buttons
@@ -48,7 +48,7 @@ public class TradeSettings {
 
             // new bot object to be able to send a message as sendMsg() is not static
             Bot settings = new Bot();
-           settings.sendMsg(Bot.getChatId(), "choose same or individual");
+            settings.sendMsg(Bot.getChatId(), "choose same or individual");
         }
 }
 
