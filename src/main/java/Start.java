@@ -6,19 +6,16 @@ import java.util.List;
 public class Start {
 
     public static void command() {
-        // add a keyboard
-        Bot.setAddKeyboard(true);
+
+        Bot.setAddKeyboard(true); // add a keyboard
 
         //create a list of keyboard rows
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
 
-        List<InlineKeyboardButton> tradeSettings = new ArrayList<>();
-        tradeSettings.add(new InlineKeyboardButton().setText("trade settings").setCallbackData("trade settings"));
-        buttons.add(tradeSettings);
+        List<InlineKeyboardButton> row1 = new ArrayList<>();
+        row1.add(new InlineKeyboardButton().setText("setup").setCallbackData("/setstrategy"));
+        buttons.add(row1);
 
-        List<InlineKeyboardButton> help = new ArrayList<>();
-        help.add(new InlineKeyboardButton().setText("help").setCallbackData("help"));
-        buttons.add(help);
 
         //send button array to Bot variable buttonArray
         Bot.setButtonArray(buttons);

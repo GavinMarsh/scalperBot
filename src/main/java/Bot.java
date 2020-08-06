@@ -1,5 +1,6 @@
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -10,6 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.lang.Math.toIntExact;
 
 
 public class Bot extends TelegramLongPollingBot {
@@ -45,7 +48,6 @@ public class Bot extends TelegramLongPollingBot {
             setMessageText();
 
             if (SignalCheck(getMessageText(), buy) && active) {
-                System.out.print("placing buy order");
                 setAddKeyboard(false);
                 sendMsg(chatId, "\uD83E\uDD16 placing buy order");
 
@@ -64,8 +66,11 @@ public class Bot extends TelegramLongPollingBot {
                 case "/sleep":
                     Sleep.command();
                     break;
+                case "/setstrategy":
+                    Strategy.command();
+                    break;
                 case "/setsame":
-                    Setsame.command();
+                    Setboth.command();
                     break;
                 case "/setbuy":
                     Setbuy.command();
@@ -77,7 +82,7 @@ public class Bot extends TelegramLongPollingBot {
                     Setcontract.command();
                     break;
                 case "/settings":
-                    Settings.command();
+                    Settings.fromText();
                     break;
                 case "/positions":
                     Positions.command();
@@ -104,59 +109,71 @@ public class Bot extends TelegramLongPollingBot {
                     Help.command();
             }
 
-        }else if (update.hasCallbackQuery()) {
+        } else if (update.hasCallbackQuery()) {
 
             // Set variables
             setNewUpdate(update);
             setCbTxt();
-            setCbMessageID();
+            setCbMessageId();
             setCbChatId();
 
             switch (getCbTxt()) {
-                case "trade settings":
-                    TradeSettings.command();
+                case "/setstrategy":
+                    Strategy.command();
                     break;
-                case "same order size":
-                    Setsame.command();
+                case "/settings":
+                    Settings.fromKeyboard();
+                    break;
+                case "scalper":
+                    Setcontract.command();
+                    break;
+                case "backwardation":
+                    Setcontract.command();
+                    break;
+                case "weekly highs/lows":
+                    Setcontract.command();
+                    break;
+                case "both":
+                    Setboth.command();
                     break;
                 case "$500same":
                     setPositionSizeBuy("$500");
                     setPositionSizeSell("$500");
-                    Setcontract.command();
+                    Activate.command();
                     break;
                 case "$1,000same":
                     setPositionSizeBuy("$1,000");
                     setPositionSizeSell("$1,000");
-                    Setcontract.command();
+                    Activate.command();
                     break;
                 case "$2,000same":
                     setPositionSizeBuy("$2,000");
                     setPositionSizeSell("$2,000");
-                    Setcontract.command();
+                    Activate.command();
                     break;
                 case "$2,500same":
                     setPositionSizeBuy("$2,500");
                     setPositionSizeSell("$2,500");
-                    Setcontract.command();
+                    Activate.command();
                     break;
                 case "$3,000same":
                     setPositionSizeBuy("$3,000");
                     setPositionSizeSell("$3,000");
-                    Setcontract.command();
+                    Activate.command();
                     break;
                 case "$4,000same":
                     setPositionSizeBuy("$4,000");
                     setPositionSizeSell("$4,000");
-                    Setcontract.command();
+                    Activate.command();
                     break;
                 case "$5,000same":
                     setPositionSizeBuy("$5,000");
                     setPositionSizeSell("$5,000");
-                    Setcontract.command();
+                    Activate.command();
                     break;
                 case "XBTUSD":
                     setContract("XBTUSD");
-                    Activate.command();
+                    Setorder.command();
                     break;
                 case "activate":
                     Activate.command();
@@ -164,8 +181,8 @@ public class Bot extends TelegramLongPollingBot {
                 case "/sleep":
                     Sleep.command();
                     break;
-                case "/setsame":
-                    Setsame.command();
+                case "/setboth":
+                    Setboth.command();
                     break;
                 case "/setbuy":
                     Setbuy.command();
@@ -175,12 +192,6 @@ public class Bot extends TelegramLongPollingBot {
                     break;
                 case "/setcontract":
                     Setcontract.command();
-                    break;
-                case "/settings":
-                    Settings.command();
-                    break;
-                case "settings":
-                    Settings.command();
                     break;
                 case "/positions":
                     Positions.command();
@@ -212,7 +223,7 @@ public class Bot extends TelegramLongPollingBot {
     /**
      * Method for checking if message contains a signal.
      */
-    public static boolean SignalCheck (String messageText, String signal){
+    public static boolean SignalCheck(String messageText, String signal) {
         Pattern validPattern;
         validPattern = Pattern.compile(signal);
         Matcher matcher = validPattern.matcher(messageText);
@@ -231,12 +242,27 @@ public class Bot extends TelegramLongPollingBot {
         if (getAddKeyboard()) {
             inlineKeyboard(message, getButtonArray());
         }
+
         try {
             execute(message);
         } catch (TelegramApiException e) {
             Logger log = null;
             assert false;
             log.log(Level.SEVERE, "Exception: ", e.toString());
+        }
+    }
+
+
+    /**
+     * Method to delete a message.
+     */
+    public static void messageDelete() {
+        Bot deleteBot = new Bot();
+        DeleteMessage deleteMessage = new DeleteMessage(Bot.getChatId(), (toIntExact(Bot.getCbMessageId())));
+        try {
+            deleteBot.execute(deleteMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
     }
 
@@ -268,6 +294,34 @@ public class Bot extends TelegramLongPollingBot {
      */
     public static void setCbChatId() {
         cbChatId = getNewUpdate().getCallbackQuery().getMessage().getChatId();
+    }
+
+    /**
+     * Setter Method for call back message id.
+     */
+    private static void setCbMessageId() {
+        cbMessageId = getNewUpdate().getCallbackQuery().getMessage().getMessageId();
+    }
+
+    /**
+     * Getter Method for call back message id.
+     */
+    public static long getCbMessageId() {
+        return cbMessageId;
+    }
+
+    /**
+     * Setter Method for call back text.
+     */
+    public static void setCbTxt() {
+        cbTxt = getNewUpdate().getCallbackQuery().getData();
+    }
+
+    /**
+     * Getter Method for call back text.
+     */
+    public static String getCbTxt() {
+        return cbTxt;
     }
 
     /**
@@ -310,34 +364,6 @@ public class Bot extends TelegramLongPollingBot {
      */
     public static String getContract() {
         return contract;
-    }
-
-    /**
-     * Setter Method for call back message id.
-     */
-    private static void setCbMessageID() {
-        cbMessageId = getNewUpdate().getCallbackQuery().getMessage().getMessageId();
-    }
-
-    /**
-     * Getter Method for call back message id.
-     */
-    public static long getCbMessageId() {
-        return cbMessageId;
-    }
-
-    /**
-     * Setter Method for call back text.
-     */
-    public static void setCbTxt() {
-        cbTxt = getNewUpdate().getCallbackQuery().getData();
-    }
-
-    /**
-     * Getter Method for call back text.
-     */
-    public static String getCbTxt() {
-        return cbTxt;
     }
 
     /**

@@ -1,22 +1,37 @@
 ToDo:
 
-- set active to false in Settings Class.
+complete one help option at a time
 
-- add methods for inline & reply keyboard buttons.
-    Fixed order size?
-    Activate? - add a 2min delay after activate is turned on with message "Bot will be live in 2min" this will
-                prevent bot from processing old telegram messages delivered from server.
+    /settings - fix show current settings
+    /stop - de-activate bot
+    - heartbeat thread
 
-- remove initialisation message.
+    /setstrategy
+    /setcontract
+    /setbuy
+    /setsell
+    /setboth
+
+- create order engine (speak with Victor to see if he wants to help)
+
+    /cancelorders
+    /positions - open positions
+    /orders - open orders
+
+MVP ----------------------------------------------
+    /leverage - show account leverage
+    /marginbox
+    /margin
+    /balance - show account balance
+    /pnl - show unrealised pnl
+    /accountmargin - show account margin
+
+    /sleep
+
+
+-----------------------------------------------------------------
 
 - purchase GitHub professional to hide code.
-
-
------------------Order handling-------------------------------
-- follow puesdocode for basic order entry/exit.
-
-
-
 
 ---------------Further Development-----------------------------
 - Complete user functionality using inline buttons.
@@ -32,19 +47,7 @@ ToDo:
     
 
 ------------------Helpers---------------------------------------------
--------------- edits the last message (good for final confirmations ------------
-        Bot aNewBot = new Bot();
-        System.out.print("got to set all class");
-        String answer = "Set position size";
-        EditMessageText new_message = new EditMessageText()
-                .setChatId(Bot.getChatId())
-                .setMessageId(toIntExact(Bot.getCbMessageId()))
-                .setText(answer);
-        try {
-            aNewBot.execute(new_message);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+
 ---------------------print to terminal-------------------------------
 System.out.print(Bot.getButtonText());
 

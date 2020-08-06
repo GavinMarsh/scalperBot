@@ -3,8 +3,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import java.util.ArrayList;
 import java.util.List;
 
-public class Setcontract {
-    public static void command() {
+public class Setorder {
+
+        public static void command() {
 
             Bot.messageDelete(); //delete previous message
             Bot.setAddKeyboard(true); // add a new keyboard
@@ -13,16 +14,19 @@ public class Setcontract {
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
 
             //buttons
-            List<InlineKeyboardButton> usd = new ArrayList<>();
-            usd.add(new InlineKeyboardButton().setText("XBTUSD").setCallbackData("XBTUSD"));
-            buttons.add(usd);
+            List<InlineKeyboardButton> row1 = new ArrayList<>();
+            row1.add(new InlineKeyboardButton().setText("buy").setCallbackData("/setbuy"));
+            row1.add(new InlineKeyboardButton().setText("sell").setCallbackData("/setsell"));
+            row1.add(new InlineKeyboardButton().setText("both").setCallbackData("/setboth"));
+            buttons.add(row1);
 
             //send button array to Bot variable buttonArray
             Bot.setButtonArray(buttons);
 
             // new bot object to be able to send a message as sendMsg() is not static
             Bot settings = new Bot();
-            settings.sendMsg(Bot.getChatId(), "\uD83E\uDD16 choose contract");
+            settings.sendMsg(Bot.getChatId(), "\uD83E\uDD16 choose order side");
         }
-
 }
+
+
