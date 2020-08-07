@@ -5,8 +5,9 @@ import java.util.List;
 
 public class Setorder {
 
-        public static void command() {
+        public static void command(String contract) {
 
+            Bot.setContract(contract);
             Bot.messageDelete(); //delete previous message
             Bot.setAddKeyboard(true); // add a new keyboard
 

@@ -7,6 +7,7 @@ public class Start {
 
     public static void command() {
 
+        Settings mysettings = new Settings();
         Bot.setAddKeyboard(true); // add a keyboard
 
         //create a list of keyboard rows

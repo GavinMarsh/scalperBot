@@ -8,8 +8,8 @@ public class Activate {
     public static void command() {
         Bot.messageDelete(); //delete previous message
         Bot.setAddKeyboard(true); // add a new keyboard
-        Bot.trading = "*yes*";
         Bot.active = true;
+        Bot.trading = "*yes*";
 
         //create a list of keyboard rows
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();

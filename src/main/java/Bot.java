@@ -35,13 +35,24 @@ public class Bot extends TelegramLongPollingBot {
     public static String contract = "n/a";
     public static String trading = "*no*";
 
+    public static String text = "\uD83E\uDD16 current settings\n" +
+            "\n" +
+            "bot trading = " + trading + "\n\n" +
+            "strategy = " +
+            strategy + "\n\n" +
+            "contract = " +
+            contract + "\n\n" +
+            "buy order size = " +
+            position_size_buy + "\n\n" +
+            "sell order size = " +
+            position_size_sell + "\n\n";
+
     @Override
     public void onUpdateReceived(Update update) {
 
         // local variables
         String buy = ">";
         String sell = "<";
-        Settings mysettings = new Settings();
 
         // check if the update has a message with text
         if (update.hasMessage() && update.getMessage().hasText()) {
@@ -49,14 +60,22 @@ public class Bot extends TelegramLongPollingBot {
             setChatId();
             setMessageText();
 
-            if (SignalCheck(getMessageText(), buy) && active) {
+            if (SignalCheck(getMessageText(), buy) && Bot.active) {
                 setAddKeyboard(false);
                 sendMsg(chatId, "\uD83E\uDD16 placing buy order");
 
-            } else if (SignalCheck(getMessageText(), sell) && active) {
+            }else if (SignalCheck(getMessageText(), buy) && !Bot.active) {
+                    setAddKeyboard(false);
+                    sendMsg(chatId, "\uD83E\uDD16 bot offline");
+
+            } else if (SignalCheck(getMessageText(), sell) && Bot.active) {
                 System.out.print("placing sell order");
                 setAddKeyboard(false);
                 sendMsg(chatId, "\uD83E\uDD16 placing sell order");
+
+            }else if (SignalCheck(getMessageText(), sell) && !Bot.active) {
+                setAddKeyboard(false);
+                sendMsg(chatId, "\uD83E\uDD16 bot offline");
 
             } else switch (getMessageText()) {
                 case "/start":
@@ -71,7 +90,7 @@ public class Bot extends TelegramLongPollingBot {
                 case "/setstrategy":
                     Strategy.command();
                     break;
-                case "/setsame":
+                case "/setboth":
                     Setboth.command();
                     break;
                 case "/setbuy":
@@ -84,9 +103,8 @@ public class Bot extends TelegramLongPollingBot {
                     Setcontract.command();
                     break;
                 case "/settings":
-                    Bot.messageText = mysettings.text;
-                    Bot.txtReply();
-                    sendMsg(chatId, messageText);
+                    Settings.command();
+                    sendMsg(chatId, Bot.text);
                     break;
                 case "/positions":
                     Positions.command();
@@ -126,8 +144,8 @@ public class Bot extends TelegramLongPollingBot {
                     Strategy.command();
                     break;
                 case "settings":
-                    Bot.messageText = mysettings.text;
-                    cbReply(messageText);
+                    Settings.command();
+                    sendMsg(Bot.getChatId(), Bot.text);
                     break;
                 case "scalper":
                     ScalperStrategy.command("scalper");
@@ -177,11 +195,13 @@ public class Bot extends TelegramLongPollingBot {
                     SetupComplete.command();
                     break;
                 case "XBTUSD":
-                    Bot.contract = "XBTUSD";
-                    Setorder.command();
+                    Setorder.command("XBTUSD");
                     break;
                 case "activate":
                     Activate.command();
+                    break;
+                case "de-activate":
+                    Stop.command();
                     break;
                 case "stop":
                     Stop.command();
@@ -247,7 +267,7 @@ public class Bot extends TelegramLongPollingBot {
         message.enableMarkdown(true);
         message.setChatId(chatId);
         message.setText(s);
-        if (getAddKeyboard()) {                             //add keyboard if required.
+        if (getAddKeyboard()) { //add keyboard if required.
             inlineKeyboard(message, getButtonArray());
         }
 
@@ -261,14 +281,6 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     /**
-     * Method to reply to a /command
-     */
-    public static void txtReply(){
-        Bot.messageDelete();
-        Bot.addKeyboard = false;
-    }
-
-    /**
      * Method to reply to received message that has a keyboard.
      */
     public void cbReply(String text) {
@@ -279,7 +291,7 @@ public class Bot extends TelegramLongPollingBot {
                 .setChatId(Bot.getChatId())
                 .setMessageId(toIntExact(Bot.getCbMessageId()))
                 .enableMarkdown(true)
-                .setText(text);
+                .setText(Bot.text);
         try {
             execute(new_message);
         } catch (TelegramApiException e) {
