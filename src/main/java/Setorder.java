@@ -15,9 +15,9 @@ public class Setorder {
 
             //buttons
             List<InlineKeyboardButton> row1 = new ArrayList<>();
-            row1.add(new InlineKeyboardButton().setText("buy").setCallbackData("/setbuy"));
-            row1.add(new InlineKeyboardButton().setText("sell").setCallbackData("/setsell"));
-            row1.add(new InlineKeyboardButton().setText("both").setCallbackData("/setboth"));
+            row1.add(new InlineKeyboardButton().setText("buy").setCallbackData("setbuy"));
+            row1.add(new InlineKeyboardButton().setText("sell").setCallbackData("setsell"));
+            row1.add(new InlineKeyboardButton().setText("both").setCallbackData("setboth"));
             buttons.add(row1);
 
             //send button array to Bot variable buttonArray

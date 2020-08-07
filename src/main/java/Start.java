@@ -13,9 +13,16 @@ public class Start {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
 
         List<InlineKeyboardButton> row1 = new ArrayList<>();
-        row1.add(new InlineKeyboardButton().setText("setup").setCallbackData("/setstrategy"));
+        row1.add(new InlineKeyboardButton().setText("setup").setCallbackData("setstrategy"));
         buttons.add(row1);
 
+        List<InlineKeyboardButton> row2 = new ArrayList<>();
+        row1.add(new InlineKeyboardButton().setText("settings").setCallbackData("settings"));
+        buttons.add(row2);
+
+        List<InlineKeyboardButton> row3 = new ArrayList<>();
+        row3.add(new InlineKeyboardButton().setText("activate").setCallbackData("activate"));
+        buttons.add(row3);
 
         //send button array to Bot variable buttonArray
         Bot.setButtonArray(buttons);

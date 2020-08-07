@@ -2,15 +2,12 @@ ToDo:
 
 complete one help option at a time
 
-    /settings - fix show current settings
-    /stop - de-activate bot
+    /activate/de-activate button under start/settings dependant on if bot is active
     - heartbeat thread
 
-    /setstrategy
-    /setcontract
+    /setcontract - add two more perp contracts
     /setbuy
     /setsell
-    /setboth
 
 - create order engine (speak with Victor to see if he wants to help)
 
@@ -49,7 +46,7 @@ MVP ----------------------------------------------
 ------------------Helpers---------------------------------------------
 
 ---------------------print to terminal-------------------------------
-System.out.print(Bot.getButtonText());
+System.out.print("app got to ?");
 
 Bot is an extension of this tutorial
     https://codegym.cc/groups/posts/telegram-bot-in-java

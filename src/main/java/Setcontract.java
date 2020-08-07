@@ -13,9 +13,9 @@ public class Setcontract {
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
 
             //buttons
-            List<InlineKeyboardButton> usd = new ArrayList<>();
-            usd.add(new InlineKeyboardButton().setText("XBTUSD").setCallbackData("XBTUSD"));
-            buttons.add(usd);
+            List<InlineKeyboardButton> row1 = new ArrayList<>();
+            row1.add(new InlineKeyboardButton().setText("XBTUSD").setCallbackData("XBTUSD"));
+            buttons.add(row1);
 
             //send button array to Bot variable buttonArray
             Bot.setButtonArray(buttons);

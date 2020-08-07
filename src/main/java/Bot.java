@@ -1,6 +1,7 @@
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -18,7 +19,6 @@ import static java.lang.Math.toIntExact;
 public class Bot extends TelegramLongPollingBot {
 
     // class variables
-    public static boolean active = false;
     public static Update newUpdate;
     public static String chatId;
     public static String messageText;
@@ -28,10 +28,12 @@ public class Bot extends TelegramLongPollingBot {
     public static boolean addKeyboard;
     public static long cbChatId;
     public static List<List<InlineKeyboardButton>> buttonArray;
-    public static String position_size_buy;
-    public static String position_size_sell;
-    public static String contract;
-
+    public static boolean active = false;
+    public static String strategy = "n/a";
+    public static String position_size_buy = "$0";
+    public static String position_size_sell = "$0";
+    public static String contract = "n/a";
+    public static String trading = "*no*";
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -39,7 +41,7 @@ public class Bot extends TelegramLongPollingBot {
         // local variables
         String buy = ">";
         String sell = "<";
-        boolean active = getActive();
+        Settings mysettings = new Settings();
 
         // check if the update has a message with text
         if (update.hasMessage() && update.getMessage().hasText()) {
@@ -82,7 +84,9 @@ public class Bot extends TelegramLongPollingBot {
                     Setcontract.command();
                     break;
                 case "/settings":
-                    Settings.fromText();
+                    Bot.messageText = mysettings.text;
+                    Bot.txtReply();
+                    sendMsg(chatId, messageText);
                     break;
                 case "/positions":
                     Positions.command();
@@ -118,14 +122,15 @@ public class Bot extends TelegramLongPollingBot {
             setCbChatId();
 
             switch (getCbTxt()) {
-                case "/setstrategy":
+                case "setstrategy":
                     Strategy.command();
                     break;
-                case "/settings":
-                    Settings.fromKeyboard();
+                case "settings":
+                    Bot.messageText = mysettings.text;
+                    cbReply(messageText);
                     break;
                 case "scalper":
-                    Setcontract.command();
+                    ScalperStrategy.command("scalper");
                     break;
                 case "backwardation":
                     Setcontract.command();
@@ -139,79 +144,82 @@ public class Bot extends TelegramLongPollingBot {
                 case "$500same":
                     setPositionSizeBuy("$500");
                     setPositionSizeSell("$500");
-                    Activate.command();
+                    SetupComplete.command();
                     break;
                 case "$1,000same":
                     setPositionSizeBuy("$1,000");
                     setPositionSizeSell("$1,000");
-                    Activate.command();
+                    SetupComplete.command();
                     break;
                 case "$2,000same":
                     setPositionSizeBuy("$2,000");
                     setPositionSizeSell("$2,000");
-                    Activate.command();
+                    SetupComplete.command();
                     break;
                 case "$2,500same":
                     setPositionSizeBuy("$2,500");
                     setPositionSizeSell("$2,500");
-                    Activate.command();
+                    SetupComplete.command();
                     break;
                 case "$3,000same":
                     setPositionSizeBuy("$3,000");
                     setPositionSizeSell("$3,000");
-                    Activate.command();
+                    SetupComplete.command();
                     break;
                 case "$4,000same":
                     setPositionSizeBuy("$4,000");
                     setPositionSizeSell("$4,000");
-                    Activate.command();
+                    SetupComplete.command();
                     break;
                 case "$5,000same":
                     setPositionSizeBuy("$5,000");
                     setPositionSizeSell("$5,000");
-                    Activate.command();
+                    SetupComplete.command();
                     break;
                 case "XBTUSD":
-                    setContract("XBTUSD");
+                    Bot.contract = "XBTUSD";
                     Setorder.command();
                     break;
                 case "activate":
                     Activate.command();
                     break;
-                case "/sleep":
+                case "stop":
+                    Stop.command();
+                    break;
+                case "sleep":
                     Sleep.command();
                     break;
-                case "/setboth":
+                case "setboth":
                     Setboth.command();
                     break;
-                case "/setbuy":
+                case "setbuy":
                     Setbuy.command();
                     break;
-                case "/setsell":
+                case "setsell":
                     Setsell.command();
                     break;
-                case "/setcontract":
+                case "setcontract":
                     Setcontract.command();
                     break;
-                case "/positions":
+                case "positions":
                     Positions.command();
                     break;
-                case "/orders":
+                case "orders":
                     Orders.command();
                     break;
-                case "/marginbox":
+                case "marginbox":
                     Marginbox.command();
                     break;
-                case "/balance":
+                case "balance":
                     Balance.command();
                     break;
-                case "/pnl":
+                case "pnl":
                     Pnl.command();
                     break;
-                case "/margin":
+                case "margin":
                     Margin.command();
                     break;
-                case "/leverage":
+                case "leverage":
                     Leverage.command();
                     break;
                 default:
@@ -239,7 +247,7 @@ public class Bot extends TelegramLongPollingBot {
         message.enableMarkdown(true);
         message.setChatId(chatId);
         message.setText(s);
-        if (getAddKeyboard()) {
+        if (getAddKeyboard()) {                             //add keyboard if required.
             inlineKeyboard(message, getButtonArray());
         }
 
@@ -252,15 +260,41 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     * Method to reply to a /command
+     */
+    public static void txtReply(){
+        Bot.messageDelete();
+        Bot.addKeyboard = false;
+    }
+
+    /**
+     * Method to reply to received message that has a keyboard.
+     */
+    public void cbReply(String text) {
+
+        Bot.setAddKeyboard(false);
+
+        EditMessageText new_message = new EditMessageText()
+                .setChatId(Bot.getChatId())
+                .setMessageId(toIntExact(Bot.getCbMessageId()))
+                .enableMarkdown(true)
+                .setText(text);
+        try {
+            execute(new_message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Method to delete a message.
      */
     public static void messageDelete() {
-        Bot deleteBot = new Bot();
+        Bot newBot = new Bot();
         DeleteMessage deleteMessage = new DeleteMessage(Bot.getChatId(), (toIntExact(Bot.getCbMessageId())));
         try {
-            deleteBot.execute(deleteMessage);
+            newBot.execute(deleteMessage);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
@@ -328,56 +362,56 @@ public class Bot extends TelegramLongPollingBot {
      * Setter Method for position_size_buy.
      */
     private static void setPositionSizeBuy(String size) {
-        position_size_buy = size;
+        Bot.position_size_buy = size;
     }
 
     /**
      * Getter Method for position_size_buy.
      */
     public static String getPositionSizeBuy() {
-        return position_size_buy;
+        return Bot.position_size_buy;
     }
 
     /**
      * Setter Method for position_size_sell.
      */
     private static void setPositionSizeSell(String size) {
-        position_size_sell = size;
+        Bot.position_size_sell = size;
     }
 
     /**
      * Getter Method for position_size_sell.
      */
     public static String getPositionSizeSell() {
-        return position_size_sell;
+        return Bot.position_size_sell;
     }
 
     /**
      * Setter Method for contract.
      */
     public static void setContract(String symbol) {
-        contract = symbol;
+        Bot.contract = symbol;
     }
 
     /**
      * Getter Method for contract.
      */
     public static String getContract() {
-        return contract;
+        return Bot.contract;
     }
 
     /**
      * Getter Method for active.
      */
     public static boolean getActive() {
-        return active;
+        return Bot.active;
     }
 
     /**
      * Setter Method for active.
      */
-    public static void setActive(boolean isActive) {
-        active = isActive;
+    public static void setActive(boolean answer) {
+        Bot.active = answer;
     }
 
     /**
