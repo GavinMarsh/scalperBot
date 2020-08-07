@@ -9,7 +9,9 @@ complete one help option at a time
     /setbuy
     /setsell
 
-- create order engine (speak with Victor to see if he wants to help)
+give to friends/family to test
+
+- code order engine in java (speak with Victor to see if he wants to help)
 
     /cancelorders
     /positions - open positions
