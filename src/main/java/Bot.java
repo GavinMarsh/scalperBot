@@ -58,8 +58,8 @@ public class Bot extends TelegramLongPollingBot {
                     Offline.command();
 
             } else if (SignalCheck(getMessageText(), sell) && Bot.active) {
-                System.out.print("placing sell order");
                 setAddKeyboard(false);
+                Orders.place(sell);
                 sendMsg(chatId, "\uD83E\uDD16 placing sell order");
 
             }else if (SignalCheck(getMessageText(), sell) && !Bot.active) {
