@@ -1,5 +1,4 @@
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +30,5 @@ public class Strategy {
         // new bot object to be able to send a message as sendMsg() is not static
         Bot start = new Bot();
         start.sendMsg(Bot.getChatId(), "\uD83E\uDD16 choose strategy");
-
     }
 }

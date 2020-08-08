@@ -1,7 +1,6 @@
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -34,18 +33,8 @@ public class Bot extends TelegramLongPollingBot {
     public static String position_size_sell = "$0";
     public static String contract = "n/a";
     public static String trading = "*no*";
-
-    public static String text = "\uD83E\uDD16 current settings\n" +
-            "\n" +
-            "bot trading = " + trading + "\n\n" +
-            "strategy = " +
-            strategy + "\n\n" +
-            "contract = " +
-            contract + "\n\n" +
-            "buy order size = " +
-            position_size_buy + "\n\n" +
-            "sell order size = " +
-            position_size_sell + "\n\n";
+    public static boolean buysignal = false;
+    public static boolean sellsignal = false;
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -62,11 +51,11 @@ public class Bot extends TelegramLongPollingBot {
 
             if (SignalCheck(getMessageText(), buy) && Bot.active) {
                 setAddKeyboard(false);
+                Orders.place(buy);
                 sendMsg(chatId, "\uD83E\uDD16 placing buy order");
 
             }else if (SignalCheck(getMessageText(), buy) && !Bot.active) {
-                    setAddKeyboard(false);
-                    sendMsg(chatId, "\uD83E\uDD16 bot offline");
+                    Offline.command();
 
             } else if (SignalCheck(getMessageText(), sell) && Bot.active) {
                 System.out.print("placing sell order");
@@ -74,8 +63,7 @@ public class Bot extends TelegramLongPollingBot {
                 sendMsg(chatId, "\uD83E\uDD16 placing sell order");
 
             }else if (SignalCheck(getMessageText(), sell) && !Bot.active) {
-                setAddKeyboard(false);
-                sendMsg(chatId, "\uD83E\uDD16 bot offline");
+                Offline.command();
 
             } else switch (getMessageText()) {
                 case "/start":
@@ -86,6 +74,9 @@ public class Bot extends TelegramLongPollingBot {
                     break;
                 case "/sleep":
                     Sleep.command();
+                    break;
+                case "/cancel":
+                    Orders.cancel();
                     break;
                 case "/setstrategy":
                     Strategy.command();
@@ -104,13 +95,12 @@ public class Bot extends TelegramLongPollingBot {
                     break;
                 case "/settings":
                     Settings.command();
-                    sendMsg(chatId, Bot.text);
                     break;
                 case "/positions":
                     Positions.command();
                     break;
                 case "/orders":
-                    Orders.command();
+                    Orders.show();
                     break;
                 case "/marginbox":
                     Marginbox.command();
@@ -145,7 +135,6 @@ public class Bot extends TelegramLongPollingBot {
                     break;
                 case "settings":
                     Settings.command();
-                    sendMsg(Bot.getChatId(), Bot.text);
                     break;
                 case "scalper":
                     ScalperStrategy.command("scalper");
@@ -225,7 +214,7 @@ public class Bot extends TelegramLongPollingBot {
                     Positions.command();
                     break;
                 case "orders":
-                    Orders.command();
+                    Orders.show();
                     break;
                 case "marginbox":
                     Marginbox.command();
@@ -277,25 +266,6 @@ public class Bot extends TelegramLongPollingBot {
             Logger log = null;
             assert false;
             log.log(Level.SEVERE, "Exception: ", e.toString());
-        }
-    }
-
-    /**
-     * Method to reply to received message that has a keyboard.
-     */
-    public void cbReply(String text) {
-
-        Bot.setAddKeyboard(false);
-
-        EditMessageText new_message = new EditMessageText()
-                .setChatId(Bot.getChatId())
-                .setMessageId(toIntExact(Bot.getCbMessageId()))
-                .enableMarkdown(true)
-                .setText(Bot.text);
-        try {
-            execute(new_message);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
         }
     }
 
@@ -375,6 +345,13 @@ public class Bot extends TelegramLongPollingBot {
      */
     private static void setPositionSizeBuy(String size) {
         Bot.position_size_buy = size;
+    }
+
+    /**
+     * Getter Method for strategy.
+     */
+    public static String getStrategy() {
+        return Bot.strategy;
     }
 
     /**

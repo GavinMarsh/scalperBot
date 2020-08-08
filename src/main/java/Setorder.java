@@ -1,5 +1,4 @@
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class Setorder {
 
             // new bot object to be able to send a message as sendMsg() is not static
             Bot settings = new Bot();
-            settings.sendMsg(Bot.getChatId(), "\uD83E\uDD16 choose order side");
+            settings.sendMsg(Bot.getChatId(), "\uD83E\uDD16 set order type");
         }
 }
 

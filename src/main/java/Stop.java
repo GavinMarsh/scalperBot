@@ -7,6 +7,6 @@ public class Stop {
 
         // new bot object to be able to send a message as sendMsg() is not static
         Bot settings = new Bot();
-        settings.sendMsg(Bot.getChatId(), "🤖 offline");
+        settings.sendMsg(Bot.getChatId(), "🤖 bot offline");
     }
 }

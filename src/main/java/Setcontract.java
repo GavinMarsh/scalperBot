@@ -1,5 +1,4 @@
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +6,7 @@ public class Setcontract {
     public static void command() {
 
             Bot.messageDelete(); //delete previous message
-            Bot.setAddKeyboard(true); // add a new keyboard
+            Bot.setAddKeyboard(true); // add keyboard
 
             //create a list of keyboard rows
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();

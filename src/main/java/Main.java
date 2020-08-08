@@ -16,5 +16,9 @@ public class Main {
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+
+        // New thread for server-up confirmation.
+        Thread appThread1 = new Thread(new Heartbeat());
+        appThread1.start();
     }
 }

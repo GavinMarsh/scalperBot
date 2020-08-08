@@ -1,14 +1,25 @@
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class Settings {
+public class Settings{
 
     public static void command() {
+        String answer = "\uD83E\uDD16 These are my current settings\n" +
+                "\n" +
+                "Strategy = " +
+                Bot.getStrategy() + "\n" +
+                "Contract = " +
+                Bot.getContract() + "\n" +
+                "Buy qty = " +
+                Bot.getPositionSizeBuy() +
+                "\n" +
+                "Sell qty = " +
+                Bot.getPositionSizeSell() + "\n" +
+                "\n" +
+                "Bot Trading = " + Bot.trading +"\n";
 
         String button_name = "";
-
         Bot.messageDelete(); //delete previous message
         Bot.setAddKeyboard(true); // add a new keyboard
 
@@ -23,16 +34,12 @@ public class Settings {
 
         List<InlineKeyboardButton> row1 = new ArrayList<>();
         row1.add(new InlineKeyboardButton().setText(button_name).setCallbackData(button_name));
+        row1.add(new InlineKeyboardButton().setText("setup").setCallbackData("setstrategy"));
         buttons.add(row1);
 
         //send button array to Bot variable buttonArray
         Bot.setButtonArray(buttons);
-
-        System.out.print("active = " + Bot.active + "\n");
-        System.out.print("strategy = " + Bot.strategy + "\n");
-        System.out.print("buy = " + Bot.position_size_buy + "\n");
-        System.out.print("sell = " + Bot.position_size_sell + "\n");
-        System.out.print("contract = " + Bot.contract+ "\n");
-        System.out.print("trading = " + Bot.trading + "\n");
+        Bot start = new Bot();
+        start.sendMsg(Bot.getChatId(), answer);
     }
 }
