@@ -26,4 +26,11 @@ public class Orders {
     public static void show() {
         //show all resting orders.
     }
+
+    /**
+     * Method to show all open positions.
+     */
+    public static void positions() {
+        //show all resting orders.
+    }
 }

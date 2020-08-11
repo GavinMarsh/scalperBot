@@ -27,6 +27,7 @@ public class Bot extends TelegramLongPollingBot {
     public static boolean addKeyboard;
     public static long cbChatId;
     public static List<List<InlineKeyboardButton>> buttonArray;
+    public static String qtySide = "";
     public static boolean active = false;
     public static String strategy = "n/a";
     public static String position_size_buy = "$0";
@@ -79,25 +80,25 @@ public class Bot extends TelegramLongPollingBot {
                     Orders.cancel();
                     break;
                 case "/setstrategy":
-                    Strategy.command();
+                    Settings.setStrategy();
                     break;
                 case "/setboth":
-                    Setboth.command();
+                    Settings.setQty("both");
                     break;
                 case "/setbuy":
-                    Setbuy.command();
+                    Settings.setQty("buy");
                     break;
                 case "/setsell":
-                    Setsell.command();
+                    Settings.setQty("sell");
                     break;
                 case "/setcontract":
-                    Setcontract.command();
+                    Settings.showContractOptions();
                     break;
                 case "/settings":
-                    Settings.command();
+                    Settings.showSettings();
                     break;
                 case "/positions":
-                    Positions.command();
+                    Orders.positions();
                     break;
                 case "/orders":
                     Orders.show();
@@ -131,60 +132,22 @@ public class Bot extends TelegramLongPollingBot {
 
             switch (getCbTxt()) {
                 case "setstrategy":
-                    Strategy.command();
+                    Settings.setStrategy();
                     break;
                 case "settings":
-                    Settings.command();
+                    Settings.showSettings();
                     break;
                 case "scalper":
                     ScalperStrategy.command("scalper");
                     break;
                 case "backwardation":
-                    Setcontract.command();
+                    Settings.showContractOptions();
                     break;
                 case "weekly highs/lows":
-                    Setcontract.command();
-                    break;
-                case "both":
-                    Setboth.command();
-                    break;
-                case "$500same":
-                    setPositionSizeBuy("$500");
-                    setPositionSizeSell("$500");
-                    SetupComplete.command();
-                    break;
-                case "$1,000same":
-                    setPositionSizeBuy("$1,000");
-                    setPositionSizeSell("$1,000");
-                    SetupComplete.command();
-                    break;
-                case "$2,000same":
-                    setPositionSizeBuy("$2,000");
-                    setPositionSizeSell("$2,000");
-                    SetupComplete.command();
-                    break;
-                case "$2,500same":
-                    setPositionSizeBuy("$2,500");
-                    setPositionSizeSell("$2,500");
-                    SetupComplete.command();
-                    break;
-                case "$3,000same":
-                    setPositionSizeBuy("$3,000");
-                    setPositionSizeSell("$3,000");
-                    SetupComplete.command();
-                    break;
-                case "$4,000same":
-                    setPositionSizeBuy("$4,000");
-                    setPositionSizeSell("$4,000");
-                    SetupComplete.command();
-                    break;
-                case "$5,000same":
-                    setPositionSizeBuy("$5,000");
-                    setPositionSizeSell("$5,000");
-                    SetupComplete.command();
+                    Settings.showContractOptions();
                     break;
                 case "XBTUSD":
-                    Setorder.command("XBTUSD");
+                    Settings.showOrderSideOptions("XBTUSD");
                     break;
                 case "activate":
                     Activate.command();
@@ -199,19 +162,40 @@ public class Bot extends TelegramLongPollingBot {
                     Sleep.command();
                     break;
                 case "setboth":
-                    Setboth.command();
+                    Settings.setQty("both");
                     break;
                 case "setbuy":
-                    Setbuy.command();
+                    Settings.setQty("buy");
                     break;
                 case "setsell":
-                    Setsell.command();
+                    Settings.setQty("sell");
                     break;
                 case "setcontract":
-                    Setcontract.command();
+                    Settings.showContractOptions();
+                    break;
+                case "$500":
+                    Settings.setQty(qtySide, "$500");
+                    break;
+                case "$1,000":
+                    Settings.setQty(qtySide, "$1,000");
+                    break;
+                case "$2,000":
+                    Settings.setQty(qtySide, "$2,000");
+                    break;
+                case "$2,500":
+                    Settings.setQty(qtySide, "$2,500");
+                    break;
+                case "$3,000":
+                    Settings.setQty(qtySide, "$3,000");
+                    break;
+                case "$4,000":
+                    Settings.setQty(qtySide, "$4,000");
+                    break;
+                case "$5,000":
+                    Settings.setQty(qtySide, "$5,000");
                     break;
                 case "positions":
-                    Positions.command();
+                    Orders.positions();
                     break;
                 case "orders":
                     Orders.show();

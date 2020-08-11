@@ -5,6 +5,6 @@ public class ScalperStrategy {
      */
     public static void command(String strategy){
         Bot.strategy = strategy;
-        Setcontract.command();
+        Settings.showContractOptions();
     }
 }

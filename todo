@@ -134,11 +134,6 @@ public class Settings {
 ------------------------------------------------------------
 
 complete one help option at a time
-
-    /activate/de-activate button under start/settings dependant on if bot is active
-    - heartbeat thread
-
-    /setcontract - add two more perp contracts
     /setbuy
     /setsell
 
