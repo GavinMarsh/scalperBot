@@ -5,7 +5,7 @@ public class Heartbeat implements Runnable {
         Bot botObject = new Bot();
 
         while (true) {
-            botObject.sendMsg("566251065", "\uD83E\uDD16 waiting");
+            botObject.sendMsg("566251065", "\uD83D\uDD0C server on");
 
             try {
                 Thread.sleep(3600000); //sleep for 60 minutes

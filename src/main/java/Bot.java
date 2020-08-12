@@ -1,70 +1,467 @@
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.lang.Math.toIntExact;
+
 
 public class Bot extends TelegramLongPollingBot {
 
-    public void onUpdateReceived(Update update) {   //process incoming message
-        String msg = update.getMessage().getText();
+    // class variables
+    public static Update newUpdate;
+    public static String chatId;
+    public static String messageText;
+    public static String cbTxt;
+    public static SendMessage messageId;
+    public static long cbMessageId;
+    public static boolean addKeyboard;
+    public static long cbChatId;
+    public static List<List<InlineKeyboardButton>> buttonArray;
+    public static String qtySide = "";
+    public static boolean active = false;
+    public static String strategy = "n/a";
+    public static String position_size_buy = "$0";
+    public static String position_size_sell = "$0";
+    public static String contract = "n/a";
+    public static String trading = "*no*";
+    public static boolean buysignal = false;
+    public static boolean sellsignal = false;
+
+    @Override
+    public void onUpdateReceived(Update update) {
+
+        // local variables
         String buy = ">";
         String sell = "<";
 
-        if (SignalCheck(msg,buy)) {
-            System.out.print("placing buy order"); //hand over to market-maker
-            sendMsg("566251065", "\uD83E\uDD16 placing buy order");
-        } else if (SignalCheck(msg,sell)) {
-            System.out.print("placing sell order");
-            sendMsg("566251065", "\uD83E\uDD16 placing sell order");
+        // check if the update has a message with text
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            setNewUpdate(update);
+            setChatId();
+            setMessageText();
+
+            if (SignalCheck(getMessageText(), buy) && Bot.active) {
+                setAddKeyboard(false);
+                Orders.place(buy);
+                sendMsg(chatId, "\uD83E\uDD16 placing buy order");
+
+            }else if (SignalCheck(getMessageText(), buy) && !Bot.active) {
+                    Offline.command();
+
+            } else if (SignalCheck(getMessageText(), sell) && Bot.active) {
+                setAddKeyboard(false);
+                Orders.place(sell);
+                sendMsg(chatId, "\uD83E\uDD16 placing sell order");
+
+            }else if (SignalCheck(getMessageText(), sell) && !Bot.active) {
+                Offline.command();
+
+            } else switch (getMessageText()) {
+                case "/start":
+                    Start.command();
+                    break;
+                case "/stop":
+                    Stop.command();
+                    break;
+                case "/sleep":
+                    Sleep.command();
+                    break;
+                case "/cancel":
+                    Orders.cancel();
+                    break;
+                case "/setstrategy":
+                    Settings.setStrategy();
+                    break;
+                case "/setboth":
+                    Settings.setQty("both");
+                    break;
+                case "/setbuy":
+                    Settings.setQty("buy");
+                    break;
+                case "/setsell":
+                    Settings.setQty("sell");
+                    break;
+                case "/setcontract":
+                    Settings.showContractOptions();
+                    break;
+                case "/settings":
+                    Settings.showSettings();
+                    break;
+                case "/positions":
+                    Orders.positions();
+                    break;
+                case "/orders":
+                    Orders.show();
+                    break;
+                case "/marginbox":
+                    Marginbox.command();
+                    break;
+                case "/balance":
+                    Balance.command();
+                    break;
+                case "/pnl":
+                    Pnl.command();
+                    break;
+                case "/margin":
+                    Margin.command();
+                    break;
+                case "/leverage":
+                    Leverage.command();
+                    break;
+                default:
+                    Help.command();
+            }
+
+        } else if (update.hasCallbackQuery()) {
+
+            // Set variables
+            setNewUpdate(update);
+            setCbTxt();
+            setCbMessageId();
+            setCbChatId();
+
+            switch (getCbTxt()) {
+                case "setstrategy":
+                    Settings.setStrategy();
+                    break;
+                case "settings":
+                    Settings.showSettings();
+                    break;
+                case "scalper":
+                    ScalperStrategy.command("scalper");
+                    break;
+                case "backwardation":
+                    Settings.showContractOptions();
+                    break;
+                case "weekly highs/lows":
+                    Settings.showContractOptions();
+                    break;
+                case "XBTUSD":
+                    Settings.showOrderSideOptions("XBTUSD");
+                    break;
+                case "activate":
+                    Activate.command();
+                    break;
+                case "de-activate":
+                    Stop.command();
+                    break;
+                case "stop":
+                    Stop.command();
+                    break;
+                case "sleep":
+                    Sleep.command();
+                    break;
+                case "setboth":
+                    Settings.setQty("both");
+                    break;
+                case "setbuy":
+                    Settings.setQty("buy");
+                    break;
+                case "setsell":
+                    Settings.setQty("sell");
+                    break;
+                case "setcontract":
+                    Settings.showContractOptions();
+                    break;
+                case "$500":
+                    Settings.setQty(qtySide, "$500");
+                    break;
+                case "$1,000":
+                    Settings.setQty(qtySide, "$1,000");
+                    break;
+                case "$2,000":
+                    Settings.setQty(qtySide, "$2,000");
+                    break;
+                case "$2,500":
+                    Settings.setQty(qtySide, "$2,500");
+                    break;
+                case "$3,000":
+                    Settings.setQty(qtySide, "$3,000");
+                    break;
+                case "$4,000":
+                    Settings.setQty(qtySide, "$4,000");
+                    break;
+                case "$5,000":
+                    Settings.setQty(qtySide, "$5,000");
+                    break;
+                case "positions":
+                    Orders.positions();
+                    break;
+                case "orders":
+                    Orders.show();
+                    break;
+                case "marginbox":
+                    Marginbox.command();
+                    break;
+                case "balance":
+                    Balance.command();
+                    break;
+                case "pnl":
+                    Pnl.command();
+                    break;
+                case "margin":
+                    Margin.command();
+                    break;
+                case "leverage":
+                    Leverage.command();
+                    break;
+                default:
+                    Help.command();
+            }
         }
     }
 
     /**
      * Method for checking if message contains a signal.
      */
-    public boolean SignalCheck(String msg, String symbol) {
-        String validPattern = symbol;
-        Pattern pattern = Pattern.compile(validPattern);
-        Matcher matcher = pattern.matcher(msg);
+    public static boolean SignalCheck(String messageText, String signal) {
+        Pattern validPattern;
+        validPattern = Pattern.compile(signal);
+        Matcher matcher = validPattern.matcher(messageText);
         return matcher.find();
     }
 
-
     /**
-     * Method for creating a message and sending it.
-     * @param chatId chat id
-     * @param s The String that you want to send as a message.
+     * Method for sending a message to the user.
      */
     public synchronized void sendMsg(String chatId, String s) {
+        SendMessage message = new SendMessage();
+        setMessageId(message);
+        message.enableMarkdown(true);
+        message.setChatId(chatId);
+        message.setText(s);
+        if (getAddKeyboard()) { //add keyboard if required.
+            inlineKeyboard(message, getButtonArray());
+        }
 
-        SendMessage execute = new SendMessage();
-        execute.enableMarkdown(true);
-        execute.setChatId(chatId);
-        execute.setText(s);
         try {
-            execute(execute);
+            execute(message);
         } catch (TelegramApiException e) {
             Logger log = null;
+            assert false;
             log.log(Level.SEVERE, "Exception: ", e.toString());
         }
     }
 
     /**
-     * Returns bot name.
+     * Method to delete a message.
+     */
+    public static void messageDelete() {
+        Bot newBot = new Bot();
+        DeleteMessage deleteMessage = new DeleteMessage(Bot.getChatId(), (toIntExact(Bot.getCbMessageId())));
+        try {
+            newBot.execute(deleteMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Method to add an inlineKeyboard to a message.
+     */
+    public static void inlineKeyboard(SendMessage message, List<List<InlineKeyboardButton>> buttons) {
+        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+        markupInline.setKeyboard(buttons);
+        message.setReplyMarkup(markupInline);
+    }
+
+    /**
+     * Getter Method to get button array list.
+     */
+    public static List<List<InlineKeyboardButton>> getButtonArray() {
+        return buttonArray;
+    }
+
+    /**
+     * Setter Method to set button array list.
+     */
+    public static void setButtonArray(List<List<InlineKeyboardButton>> buttonList) {
+        buttonArray = buttonList;
+    }
+
+    /**
+     * Setter Method for Call back chat id.
+     */
+    public static void setCbChatId() {
+        cbChatId = getNewUpdate().getCallbackQuery().getMessage().getChatId();
+    }
+
+    /**
+     * Setter Method for call back message id.
+     */
+    private static void setCbMessageId() {
+        cbMessageId = getNewUpdate().getCallbackQuery().getMessage().getMessageId();
+    }
+
+    /**
+     * Getter Method for call back message id.
+     */
+    public static long getCbMessageId() {
+        return cbMessageId;
+    }
+
+    /**
+     * Setter Method for call back text.
+     */
+    public static void setCbTxt() {
+        cbTxt = getNewUpdate().getCallbackQuery().getData();
+    }
+
+    /**
+     * Getter Method for call back text.
+     */
+    public static String getCbTxt() {
+        return cbTxt;
+    }
+
+    /**
+     * Setter Method for position_size_buy.
+     */
+    private static void setPositionSizeBuy(String size) {
+        Bot.position_size_buy = size;
+    }
+
+    /**
+     * Getter Method for strategy.
+     */
+    public static String getStrategy() {
+        return Bot.strategy;
+    }
+
+    /**
+     * Getter Method for position_size_buy.
+     */
+    public static String getPositionSizeBuy() {
+        return Bot.position_size_buy;
+    }
+
+    /**
+     * Setter Method for position_size_sell.
+     */
+    private static void setPositionSizeSell(String size) {
+        Bot.position_size_sell = size;
+    }
+
+    /**
+     * Getter Method for position_size_sell.
+     */
+    public static String getPositionSizeSell() {
+        return Bot.position_size_sell;
+    }
+
+    /**
+     * Setter Method for contract.
+     */
+    public static void setContract(String symbol) {
+        Bot.contract = symbol;
+    }
+
+    /**
+     * Getter Method for contract.
+     */
+    public static String getContract() {
+        return Bot.contract;
+    }
+
+    /**
+     * Getter Method for active.
+     */
+    public static boolean getActive() {
+        return Bot.active;
+    }
+
+    /**
+     * Setter Method for active.
+     */
+    public static void setActive(boolean answer) {
+        Bot.active = answer;
+    }
+
+    /**
+     * Getter Method for addKeyboard.
+     */
+    public static boolean getAddKeyboard() {
+        return addKeyboard;
+    }
+
+    /**
+     * Setter Method for addKeyboard.
+     */
+    public static void setAddKeyboard(boolean keyboard) {
+        addKeyboard = keyboard;
+    }
+
+    /**
+     * Setter method to set newUpdate.
+     */
+    public static void setNewUpdate (Update update){
+        newUpdate = update;
+    }
+
+    /**
+     * Getter method to get newUpdate.
+     */
+    public static Update getNewUpdate(){
+        return newUpdate;
+    }
+
+    /**
+     * Setter method to set new message id.
+     */
+    public static void setMessageId(SendMessage message) {
+        messageId = message;
+    }
+
+    /**
+     * Getter method to get new message.
+     */
+    public static String getMessageText() {
+        return messageText;
+    }
+
+    /**
+     * Setter method to set new message update.
+     */
+    public static void setMessageText() {
+        messageText = getNewUpdate().getMessage().getText();
+    }
+
+    /**
+     * Setter method to set chatID.
+     */
+    public static void setChatId (){
+        chatId = getNewUpdate().getMessage().getChatId().toString();
+    }
+
+    /**
+     * Getter method to return chatID.
+     */
+    public static String getChatId() {
+        return chatId;
+    }
+
+    /**
+     * Getter method to return bot username.
      */
     public String getBotUsername() {
         return "ScalperTelegramBot";
     }
 
     /**
-     * Returns bot token.
+     * Getter method to return bot token.
      */
     public String getBotToken() {
-        return "1364754722:AAHqxkoB2NH6jRq2Uxky4Rbq0mJHs-i-DQ0"; //change this to read from local file
+        return "1364754722:AAHqxkoB2NH6jRq2Uxky4Rbq0mJHs-i-DQ0";
     }
 }
+
